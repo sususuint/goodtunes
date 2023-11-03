@@ -200,6 +200,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             <input type="hidden" name="song_name_to_delete"
                     value="<?php echo $review['song_name']; ?>"
             />
+            <input type="hidden" name="release_date_to_delete"
+                    value="<?php echo $review['release_date']; ?>"
+            />
+            <input type="hidden" name="user_id_to_delete"
+                    value="<?php echo $review['user_id']; ?>"
+            />
+            <input type="hidden" name="review_number_to_delete"
+                    value="<?php echo $review['review_number']; ?>"
+            />
      </form>
     </td>
   </tr>
