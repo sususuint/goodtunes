@@ -1,12 +1,14 @@
-
 <?php
 require("connect-db.php");
 // include("connect-db.php");
 require("review-db.php");
+require("user-db.php");
 
-$list_of_reviews = getAllReviews();
 
 
+if (isset($_COOKIE['user']))
+{ 
+$list_of_reviews = getAllReviews($_COOKIE['user']);
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['updateBtn']))
@@ -16,18 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     else if (!empty($_POST['confirmUpdateBtn']))
     {
         updateReviewByName($_POST['song_name'], $_POST['release_date'], $_POST['user_id'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
-        $list_of_reviews = getAllReviews();    // name, major, year
+        $list_of_reviews = getAllReviews($_COOKIE['user']);    // name, major, year
         // var_dump($list_of_friends);
     }
     else if (!empty($_POST['deleteBtn']))
     {
         deleteReview($_POST['song_name_to_delete'], $_POST['release_date_to_delete'], $_POST['user_id_to_delete'], $_POST['review_number_to_delete']);
-        $list_of_reviews = getAllReviews();    // name, major, year
+        $list_of_reviews = getAllReviews($_COOKIE['user']);    // name, major, year
     }
     else if (!empty($_POST['addBtn']))
     {
         addReview($_POST['song_name'], $_POST['release_date'], $_POST['user_id'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
-        $list_of_reviews = getAllReviews();    // name, major, year
+        $list_of_reviews = getAllReviews($_COOKIE['user']);    // name, major, year
         // var_dump($list_of_friends);
     }
 }
@@ -212,7 +214,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
      </form>
     </td>
   </tr>
-<?php endforeach; ?>
+<?php endforeach; } 
+else 
+  header('Location: login.php');   // force login
+?>
 </table>
 </div>  
 

@@ -23,11 +23,12 @@ function addReview($song_name, $release_date, $user_id, $review_number, $rating,
   $statement->closeCursor();
 }
 
-function getAllReviews()
+function getAllReviews($user_id)
 {
   global $db;
-  $query = "select * from review";
+  $query = "select * from review where user_id=:user_id";
   $statement = $db->prepare($query); 
+  $statement->bindValue(':user_id', $user_id);
   $statement->execute();
   $results = $statement->fetchAll();   // fetch()
   $statement->closeCursor();
