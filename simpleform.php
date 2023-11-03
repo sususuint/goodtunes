@@ -2,33 +2,32 @@
 <?php
 require("connect-db.php");
 // include("connect-db.php");
-require("friend-db.php");
+require("review-db.php");
 
-// $list_of_friends = ''; 
-$list_of_friends = getAllFriends();
+$list_of_reviews = getAllReviews();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['updateBtn']))
     {
-        echo $_POST['friendname_to_update'];
+        echo $_POST['song_name_to_update'];
     }
     else if (!empty($_POST['confirmUpdateBtn']))
     {
-        updateFriendByName($_POST['friendname'], $_POST['major'], $_POST['year']);
-        $list_of_friends = getAllFriends();    // name, major, year
+        updateReviewByName($_POST['song_name'], $_POST['release_date'], $_POST['user_id'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
+        $list_of_reviews = getAllReviews();    // name, major, year
         // var_dump($list_of_friends);
     }
     else if (!empty($_POST['deleteBtn']))
     {
-        deleteFriend($_POST['friendname_to_delete']);
-        $list_of_friends = getAllFriends();    // name, major, year
+        deleteReview($_POST['song_name_to_delete'], $_POST['release_date_to_delete'], $_POST['user_id_to_delete'], $_POST['review_number_to_delete']);
+        $list_of_reviews = getAllReviews();    // name, major, year
     }
     else if (!empty($_POST['addBtn']))
     {
-        addFriend($_POST['friendname'], $_POST['major'], $_POST['year']);
-        $list_of_friends = getAllFriends();    // name, major, year
+        addReview($_POST['song_name'], $_POST['release_date'], $_POST['user_id'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
+        $list_of_reviews = getAllReviews();    // name, major, year
         // var_dump($list_of_friends);
     }
 }
@@ -52,99 +51,154 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 <?php include("header.html"); ?>  
 <div class="container">
-  <h1>DB programming: Get Started</h1>  
+  <h1>Add Review</h1>  
 
   <!-- <a href="simpleform.php">Click to open the next page</a> -->
  
   <form name="mainForm" action="simpleform.php" method="post">   
       <div class="row mb-3 mx-3">
-        Your name:
-        <input type="text" class="form-control" name="friendname" required 
+        Your user id:
+        <input type="text" class="form-control" name="user_id" required 
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             { 
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
-                echo $_POST['friendname_to_update']; // access the $_POST['param_name'] 
+                echo $_POST['user_id_to_update']; // access the $_POST['param_name'] 
             }
             // echo $_POST['year_to_update']; 
             ?>"  
         />  
       </div>  
       <div class="row mb-3 mx-3">
-        Major:
-        <input type="text" class="form-control" name="major" required 
+        Song name:
+        <input type="text" class="form-control" name="song_name" required 
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             { 
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
-                echo $_POST['major_to_update']; // access the $_POST['param_name'] 
+                echo $_POST['song_name_to_update']; // access the $_POST['param_name'] 
             }
             // echo $_POST['year_to_update']; 
             ?>"
         />        
       </div>  
       <div class="row mb-3 mx-3">
-        Year:
-        <input type="text" class="form-control" name="year" required 
+        Release date:
+        <input type="text" class="form-control" name="release_date" required 
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             { 
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
-                echo $_POST['year_to_update']; // access the $_POST['param_name'] 
+                echo $_POST['release_date_to_update']; // access the $_POST['param_name'] 
             }
             // echo $_POST['year_to_update']; 
             ?>"
         />        
-      </div>  
+      </div>
       <div class="row mb-3 mx-3">
-        <input type="submit" value="Add friend" name="addBtn" 
-                class="btn btn-primary" title="Insert a friend into a friends table" />
+        Review Number:
+        <input type="text" class="form-control" name="review_number" required 
+            value="<?php 
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            { 
+              if (!empty($_POST['updateBtn']))  // if the update button has been clicked
+                echo $_POST['review_number_to_update']; // access the $_POST['param_name'] 
+            }
+            // echo $_POST['year_to_update']; 
+            ?>"
+        />        
+      </div> 
+      <div class="row mb-3 mx-3">
+        Rating:
+        <input type="text" class="form-control" name="rating" required 
+            value="<?php 
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            { 
+              if (!empty($_POST['updateBtn']))  // if the update button has been clicked
+                echo $_POST['rating_to_update']; // access the $_POST['param_name'] 
+            }
+            // echo $_POST['year_to_update']; 
+            ?>"
+        />        
+      </div>   
+      <div class="row mb-3 mx-3">
+        Review text:
+        <input type="text" class="form-control" name="review_text" required 
+            value="<?php 
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            { 
+              if (!empty($_POST['updateBtn']))  // if the update button has been clicked
+                echo $_POST['review_text_to_update']; // access the $_POST['param_name'] 
+            }
+            // echo $_POST['year_to_update']; 
+            ?>"
+        />        
+      </div>    
+      <div class="row mb-3 mx-3">
+        <input type="submit" value="Add review" name="addBtn" 
+                class="btn btn-primary" title="Insert a review into a review table" />
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Confirm update" name="confirmUpdateBtn" 
-                class="btn btn-primary" title="Update a friend into a friends table" />
+                class="btn btn-primary" title="Update a review in a review table" />
       </div>  
     </form>     
 
 <hr/>
-<h3>List of friends</h3>
+<h3>List of reviews</h3>
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="30%">Name        
-    <th width="30%">Major        
-    <th width="30%">Year 
+    <th width="30%">Song        
+    <th width="30%">Release Date       
+    <th width="30%">User ID
     <th>&nbsp;</th>
     <th>&nbsp;</th>
   </tr>
   </thead>
 
 
-<?php foreach ($list_of_friends as $friend): ?>
+<?php foreach ($list_of_reviews as $review): ?>
   <tr>
-     <td><?php echo $friend['name']; ?></td>   <!-- column name --> 
-     <td><?php echo $friend['major']; ?></td>        
-     <td><?php echo $friend['year']; ?></td> 
+     <td><?php echo $review['user_id']; ?></td> 
+     <td><?php echo $review['song_name']; ?></td>   <!-- column name --> 
+     <td><?php echo $review['release_date']; ?></td>
+     <td><?php echo $review['review_number']; ?></td>         
+     <td><?php echo $review['user_id']; ?></td> 
+     <td><?php echo $review['rating']; ?></td>        
+     <td><?php echo $review['review_text']; ?></td> 
      <td>
         <form action="simpleform.php" method="post"> 
             <input type="submit" value="Update" name="updateBtn" class="btn btn-secondary" />
-            <input type="hidden" name="friendname_to_update"
-                    value="<?php echo $friend['name']; ?>"
+            <input type="hidden" name="user_id_to_update"
+                    value="<?php echo $review['user_id']; ?>"
             />
-            <input type="hidden" name="major_to_update"
-                    value="<?php echo $friend['major']; ?>"
+            <input type="hidden" name="song_name_to_update"
+                    value="<?php echo $review['song_name']; ?>"
             />
-            <input type="hidden" name="year_to_update"
-                    value="<?php echo $friend['year']; ?>"
+            <input type="hidden" name="release_date_to_update"
+                    value="<?php echo $review['release_date']; ?>"
+            />
+            <input type="hidden" name="review_number_to_update"
+                    value="<?php echo $review['review_number']; ?>"
+            />
+            <input type="hidden" name="user_id_to_update"
+                    value="<?php echo $review['user_id']; ?>"
+            />
+            <input type="hidden" name="rating_to_update"
+                    value="<?php echo $review['rating']; ?>"
+            />
+            <input type="hidden" name="review_text_to_update"
+                    value="<?php echo $review['review_text']; ?>"
             />
         </form>
      </td>
      <td>
         <form action="simpleform.php" method="post"> 
             <input type="submit" value="Delete" name="deleteBtn" class="btn btn-danger"  />
-            <input type="hidden" name="friendname_to_delete"
-                    value="<?php echo $friend['name']; ?>"
+            <input type="hidden" name="song_name_to_delete"
+                    value="<?php echo $review['song_name']; ?>"
             />
      </form>
     </td>
