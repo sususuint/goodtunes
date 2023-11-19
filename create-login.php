@@ -1,3 +1,29 @@
+<?php
+function addUser($user_id, $pass_word, $email, $name, $age) 
+{
+  global $db; 
+  // bad way
+  // $query = "insert into friends values ('" . $friendname . "', '" . $major . "'," . $year .") ";
+  // $db->query($query);  // compile + exe
+
+  // good way
+  $query = "insert into site_user values (:user_id, :pass_word, :email, :name, :age) ";
+  // prepare: 
+  // 1. prepare (compile) 
+  // 2. bindValue + exe
+
+  $statement = $db->prepare($query); 
+  $statement->bindValue(':user_id', $user_id);
+  $statement->bindValue(':pass_word', $pass_word);
+  $statement->bindValue(':email', $email);
+  $statement->bindValue(':name', $name);
+  $statement->bindValue(':age', $age);
+  $statement->execute();
+  $statement->closeCursor();
+}
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +40,7 @@
     <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
       Name: <input type="text" name="username" class="form-control" autofocus required /> <br/>
       Password: <input type="password" name="pwd" class="form-control" required /> <br/>
-      <input type="submit" value="Sign in" class="btn btn-light"  />   
+      <input type="submit" value="Sign in" name="btn" class="btn btn-light"  />   
     </form>
   </div>
 
