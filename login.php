@@ -69,28 +69,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
    // otherwise, reject the password and force re-login.
    if (isset($_POST['pwd']))
    {
-      $pwd = trim($_POST['pwd']);
-      $hash = password_hash($pwd, PASSWORD_DEFAULT);
+      $pwd = htmlspecialchars(trim($_POST['pwd'])); #user input
+      // $hash = password_hash($pwd, PASSWORD_DEFAULT);
       $pass = getUserPass($user);
-   //   $hash1 = password_hash($pass['pass_word'], PASSWORD_DEFAULT);
-   //   echo "$hash1 \n";
-   //   echo "$hash";
-   //   if (!ctype_alnum($pwd))
-   //      reject('Password');
-   //   elseif ($hash1 != $hash)
-      if (!password_verify($pass['pass_word'], $hash))
+      $hash = $pass['pass_word'];
+      if (!password_verify($pwd, $hash))
          reject('Password');
       else
       {
-         // setcookie(name, value, expiery-time)
-         // setcookie() function stores the submitted fields' name/value pair
          setcookie('user', $user, time()+3600);
-         
-//         setcookie('pwd', md5($pwd), time()+3600);  // create a hash conversion of password values using md5() function  
          setcookie('pwd', password_hash($pwd, PASSWORD_DEFAULT), time()+3600);    // password_hash() requires at least PHP5.5
-//       setcookie('pwd', password_hash($pwd, PASSWORD_BCRYPT), time()+3600);    
-					
-         // Redirect the browser to another page using the header() function to specify the target URL
          header('Location: simpleform.php');
       }
    }
