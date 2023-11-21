@@ -65,4 +65,16 @@ function deleteReview($song_name, $release_date, $user_id, $review_number)
   $statement->closeCursor();
 }
 
+function getReviewNum($user_id)
+{
+  global $db;
+  $query = "Select count(*) as count from review where user_id=:user_id";
+  $statement = $db->prepare($query); 
+  $statement->bindValue(':user_id', $user_id);
+  $statement->execute();
+  $results = $statement->fetchAll();
+  $statement->closeCursor();
+  return $results;
+}
+
 ?>
