@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         />        
       </div>
       <div class="row mb-3 mx-3">
-        Playlist Number:
-        <input type="text" class="form-control" name="playlist_num" required 
+        <!-- Playlist ID (DO NOT CHANGE): -->
+        <input type="hidden" class="form-control" name="playlist_num" required 
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             { 
@@ -84,15 +84,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 else{
                   $array = getPlaylistNum($_COOKIE['user']);
                   foreach ($array as $item):
-                    echo $item['count'] + 1;
+                    echo $item['max_num'] + 1;
                   endforeach;
                 }
             }
             else{
+              $no_plays = True;
               $array = getPlaylistNum($_COOKIE['user']);
               foreach ($array as $item):
-                echo $item['count'] + 1;
+                $no_plays = False;
+                echo $item['max_num'] + 1;
               endforeach;
+              if ($no_plays){
+                echo 1;
+              }
             }
             ?>"
         />        
@@ -113,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="30%">Playlist Number     
+    <!-- <th width="30%">Playlist Number      -->
     <th width="30%">Name     
     <th width="50%">Description
     <th width="50%">Songs
@@ -126,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <?php foreach ($list_of_playlists as $playlist): ?>
 
   <tr>
-     <td><?php echo $playlist['playlist_num']; ?></td> 
+     <!-- <td><?php echo $playlist['playlist_num']; ?></td>  -->
      <td><?php echo $playlist['name']; ?></td>
      <td><?php echo $playlist['description']; ?></td>
      <td><?php 

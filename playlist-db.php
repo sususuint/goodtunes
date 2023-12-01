@@ -54,7 +54,7 @@ function deletePlaylist($user_id, $playlist_num)
 function getPlaylistNum($user_id)
 {
   global $db;
-  $query = "Select count(*) as count from playlist where user_id=:user_id";
+  $query = "Select max(playlist_num) as max_num from playlist where user_id=:user_id group by user_id";
   $statement = $db->prepare($query); 
   $statement->bindValue(':user_id', $user_id);
   $statement->execute();
