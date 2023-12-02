@@ -14,8 +14,10 @@
     <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
       Name: <input type="text" name="username" class="form-control" autofocus required /> <br/>
       Password: <input type="password" name="pwd" class="form-control" required /> <br/>
-      <input type="submit" value="Sign in" class="btn btn-light"  />   
+      <input type="submit" value="Sign in" class="btn btn-light"  /> 
     </form>
+    <a href="create-login.php"> <button>Create An Account</button>
+</a> 
   </div>
 
 <?php
@@ -79,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
       {
          setcookie('user', $user, time()+3600);
          setcookie('pwd', password_hash($pwd, PASSWORD_DEFAULT), time()+3600);    // password_hash() requires at least PHP5.5
-         header('Location: simpleform.php');
+         header('Location: reviews.php');
       }
    }
 }
