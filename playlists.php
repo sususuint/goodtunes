@@ -26,6 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         addPlaylist($_COOKIE['user'], $_POST['playlist_num'],$_POST['playlist_name'], $_POST['playlist_description']);
         $list_of_playlists = getAllPlaylists($_COOKIE['user']);
       }
+    else if (!empty($_POST['delete2Btn']))
+    {
+        deleteSongFromPlaylist($_POST['song_name_to_delete'], $_POST['release_date_to_delete'], $_COOKIE['user'], $_POST['playlist_num_to_delete']);
+        $list_of_playlists = getAllPlaylists($_COOKIE['user']);
+      }
 }
 ?>
 
@@ -119,10 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <thead>
   <tr style="background-color:#B0B0B0">
     <!-- <th width="30%">Playlist Number      -->
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
     <th width="30%">Name     
     <th width="50%">Description
     <th width="50%">Songs
-    <th>&nbsp;</th>
     <th>&nbsp;</th>
   </tr>
   </thead>
@@ -131,16 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <?php foreach ($list_of_playlists as $playlist): ?>
 
   <tr>
-     <!-- <td><?php echo $playlist['playlist_num']; ?></td>  -->
-     <td><?php echo $playlist['name']; ?></td>
-     <td><?php echo $playlist['description']; ?></td>
-     <td><?php 
-       $songs = getSongs($playlist['user_id'], $playlist['playlist_num']);
-       foreach ($songs as $song):
-        echo $song['song_name'];
-        echo "</br >";
-       endforeach;
-     ?></td>
      <td>
         <form action="playlists.php" method="post"> 
             <input type="submit" value="Update" name="updateBtn" class="btn btn-secondary" />
@@ -172,6 +168,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             />
      </form>
     </td>
+     <td><?php echo $playlist['name']; ?></td>
+     <td><?php echo $playlist['description']; ?></td>
+     <td><?php 
+       $songs = getSongs($playlist['user_id'], $playlist['playlist_num']);
+       foreach ($songs as $song):
+        echo $song['song_name'];
+        echo "</br >";
+        ?>
+        <form action="playlists.php" method="post"> 
+            <input type="submit" value="Delete song" name="delete2Btn" class="btn btn-danger"  />
+            <input type="hidden" name="song_name_to_delete"
+                    value="<?php echo $song['song_name']; ?>"
+            />
+            <input type="hidden" name="release_date_to_delete"
+                    value="<?php echo $song['release_date']; ?>"
+            />
+            <input type="hidden" name="playlist_num_to_delete"
+                    value="<?php echo $playlist['playlist_num']; ?>"
+            />
+     </form>
+         <?php
+    echo "</br >";
+       endforeach;
+       
+     ?></td>
   </tr>
 <?php endforeach; } 
 else 

@@ -23,6 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         $list_of_songs = songSearch($_POST['song_name']);
       }
+    if (!empty($_POST['addBtn']))
+    {
+        $list_of_playlists = getAllPlaylists($_COOKIE['user']);
+      }
+    if (!empty($_POST['add2Btn']))
+    {
+        addToPlaylist($_POST['song_name_to_add'], $_POST['release_date_to_add'], $_COOKIE['user'], $_POST['playlist_num_to_add']);
+      }
 }
 ?>
 
@@ -53,15 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <input type="submit" value="Search For Songs" name="search" 
                 class="btn btn-primary" title="Find similar songs" />
       </div>  
-    </form>     
+    </form>
+       
 
 <hr/>
 
-<?php if(empty($list_of_songs) && $_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST['songBtn'])){
+<?php if(empty($list_of_songs) && $_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST['songBtn']) && empty($_POST['addBtn']) && empty($_POST['add2Btn'])){
   echo "A song match wasn't found, please enter another search query!";
 } ?>
 
-<?php if(empty($_POST['songBtn'])){ ?>
+<?php if(empty($_POST['songBtn']) && empty($_POST['addBtn']) && empty($_POST['add2Btn'])){ ?>
 <h3>Songs:</h3>
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
@@ -91,7 +100,7 @@ foreach ($list_of_songs as $song): ?>
      ?></td>
      <td>
      <form action="songs.php" method="post"> 
-            <input type="submit" value="View_song" name="songBtn" class="btn btn-secondary" />
+            <input type="submit" value="View Song" name="songBtn" class="btn btn-secondary" />
             <input type="hidden" name="song_name"
                     value="<?php echo $song['song_name']; ?>"
             />
@@ -103,11 +112,22 @@ foreach ($list_of_songs as $song): ?>
             />
         </form>
     </td>
+    <td>
+     <form action="songs.php" method="post"> 
+            <input type="submit" value="Add to Playlist" name="addBtn" class="btn btn-secondary" />
+            <input type="hidden" name="song_name"
+                    value="<?php echo $song['song_name']; ?>"
+            />
+            <input type="hidden" name="release_date"
+                    value="<?php echo $song['release_date']; ?>"
+            />
+        </form>
+    </td>
   </tr>
 
 <?php endforeach; 
   }
-  else{
+  if (!empty($_POST['songBtn'])){
     # shows all song data
     foreach ($song_info as $info): 
       echo $info['song_name'] . "</br >";
@@ -139,6 +159,30 @@ foreach ($list_of_songs as $song): ?>
      
      # add song to user's playlist
      # remove song from user's playlist
+
+  }
+  if (!empty($_POST['addBtn'])){
+    foreach ($list_of_playlists as $playlist): ?> 
+      <tr>
+      <td><?php echo $playlist['name']. ": "; ?></td>  
+      <td><?php echo $playlist['description'] . "</br >"; ?></td>  
+      <td>
+        <form action="songs.php" method="post"> 
+            <input type="submit" value="Add" name="add2Btn" class="btn btn-secondary" />
+            <input type="hidden" name="song_name_to_add"
+                    value="<?php echo $_POST['song_name']; ?>"
+            />
+            <input type="hidden" name="playlist_num_to_add"
+                    value="<?php echo $playlist['playlist_num']; ?>"
+            />
+            <input type="hidden" name="release_date_to_add"
+                    value="<?php echo $_POST['release_date']; ?>"
+            />
+        </form>
+     </td>
+    </tr>
+     <?php endforeach;
+    
 
   }
 

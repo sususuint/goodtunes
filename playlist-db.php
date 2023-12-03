@@ -66,7 +66,7 @@ function getPlaylistNum($user_id)
 function getSongs($user_id, $playlist_num)
 {
   global $db;
-  $query = "Select song_name from added_to where user_id=:user_id and playlist_num=:playlist_num";
+  $query = "Select song_name, release_date from added_to where user_id=:user_id and playlist_num=:playlist_num";
   $statement = $db->prepare($query); 
   $statement->bindValue(':user_id', $user_id);
   $statement->bindValue(':playlist_num', $playlist_num);
@@ -74,6 +74,19 @@ function getSongs($user_id, $playlist_num)
   $results = $statement->fetchAll();
   $statement->closeCursor();
   return $results;
+}
+
+function deleteSongFromPlaylist($song_name, $release_date, $user_id, $playlist_num)
+{
+  global $db;
+  $query = "DELETE FROM added_to WHERE song_name=:song_name AND release_date =:release_date AND user_id =:user_id AND playlist_num =:playlist_num";
+  $statement = $db->prepare($query); 
+  $statement->bindValue(':song_name', $song_name);
+  $statement->bindValue(':release_date', $release_date);
+  $statement->bindValue(':user_id', $user_id);
+  $statement->bindValue(':playlist_num', $playlist_num);
+  $statement->execute();
+  $statement->closeCursor();
 }
 
 ?>

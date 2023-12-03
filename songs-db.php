@@ -75,4 +75,39 @@ function getAvgRating($song_name, $release_date)
   return $results;
 }
 
+function getMostAddedToSongs()
+{
+  global $db;
+  $query = "SELECT song_name, stage_name FROM `song` NATURAL JOIN `added_to` NATURAL JOIN performs GROUP BY song_name, release_date ORDER BY COUNT(song_name) DESC LIMIT 3;";
+  $statement = $db->prepare($query); 
+  $statement->execute();
+  $results = $statement->fetchAll();   // fetch()
+  $statement->closeCursor();
+  return $results;
+}
+
+function getTopRatedSongs()
+{
+  global $db;
+  $query = "SELECT song_name, stage_name, avg(rating) as average FROM `song` NATURAL JOIN `review`NATURAL JOIN performs GROUP BY song_name, release_date HAVING AVG(rating) ORDER BY AVG(rating) DESC LIMIT 3;";
+  $statement = $db->prepare($query); 
+  $statement->execute();
+  $results = $statement->fetchAll();   // fetch()
+  $statement->closeCursor();
+  return $results;
+}
+
+function addToPlaylist($song_name, $release_date, $user_id, $playlist_number)
+{
+  global $db;
+  $query = "INSERT INTO added_to VALUES(:song_name, :release_date, :user_id, :playlist_number)";
+  $statement = $db->prepare($query); 
+  $statement->bindValue(':song_name', $song_name);
+  $statement->bindValue(':release_date', $release_date);
+  $statement->bindValue(':user_id', $user_id);
+  $statement->bindValue(':playlist_number', $playlist_number);
+  $statement->execute();
+  $statement->closeCursor();
+}
+
 ?>

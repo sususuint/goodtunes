@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
       {
          setcookie('user', $user, time()+3600);
          setcookie('pwd', password_hash($pwd, PASSWORD_DEFAULT), time()+3600);    // password_hash() requires at least PHP5.5
-         header('Location: reviews.php');
+         header('Location: home.php');
       }
    }
 }
