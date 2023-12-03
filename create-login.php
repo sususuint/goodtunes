@@ -11,8 +11,23 @@
   <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
 </head>
 
-<body>
-<?php include("header.html"); ?>  
+<body style="background-color:pink;" >
+<header>  
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">            
+          <a class="navbar-brand" href="#">GoodTunes</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="login.php">Back to Login</a>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
 <div class="container">
   <h1>Create An Account</h1>   
   <form name="mainForm" action="create-login.php" method="post">   
@@ -83,8 +98,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['accountBtn']))
     {
-        addUser($_POST['user_id'], $hash, $_POST['email'], $_POST['name'], $_POST['age']);
-        header('Location: login.php');
+        # constraint integrity checks
+        $exists = False;
+        $list_of_users= getAllUsers();
+        foreach ($list_of_users as $user):
+          if ($_POST['user_id'] == $user['user_id']){
+            $exists = True;
+          } 
+        endforeach;
+        $underage = False;
+        if ($_POST['age'] < 18)
+          $underage = True;
+
+        # if pass constraint checks add to database
+        if (!$exists && !$underage){
+          addUser($_POST['user_id'], $hash, $_POST['email'], $_POST['name'], $_POST['age']);
+          header('Location: login.php');
+        }
+        # if doesn't pass let user know why
+        else{
+          if ($exists)
+            echo "Please enter another username, this one already exists <br /> ";
+          if ($underage)
+            echo "You must be 18 or older to create an account on GoodTunes";
+        }
     }
 }
 ?>

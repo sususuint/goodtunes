@@ -68,11 +68,22 @@ function deleteReview($song_name, $release_date, $user_id, $review_number)
 function getReviewNum($user_id)
 {
   global $db;
-  $query = "Select count(*) as count from review where user_id=:user_id";
+  $query = "Select max(review_number) as max_num from review where user_id=:user_id group by user_id";
   $statement = $db->prepare($query); 
   $statement->bindValue(':user_id', $user_id);
   $statement->execute();
   $results = $statement->fetchAll();
+  $statement->closeCursor();
+  return $results;
+}
+
+function getAllSongs()
+{
+  global $db;
+  $query = "select song_name, release_date from song ";
+  $statement = $db->prepare($query); 
+  $statement->execute();
+  $results = $statement->fetchAll();   // fetch()
   $statement->closeCursor();
   return $results;
 }

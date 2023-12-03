@@ -4,30 +4,48 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
-  
+  <style>
+      .vertical-center {
+         margin: 0;
+         position: absolute;
+         top: 30%;
+         -ms-transform: translateY(-50%);
+         transform: translateY(-50%);
+         }
+      .horizontal-center {
+         margin: 0;
+         position: absolute;
+         left: 50%;
+         -ms-transform: translateX(-50%);
+         transform: translateX(-50%);
+      }
+</style>
   <title>PHP State Maintenance (Cookies)</title>      
 </head>
-<body>
+<body style="background-color:pink;" >
   
-  <div class="container">
-    <h1>Welcome to GoodTunes</h1>
+  <div class="container vertical-center horizontal-center" style= "width">
+    <h1>Welcome to GoodTunes!</h1>
     <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
       Name: <input type="text" name="username" class="form-control" autofocus required /> <br/>
       Password: <input type="password" name="pwd" class="form-control" required /> <br/>
       <input type="submit" value="Sign in" class="btn btn-light"  /> 
     </form>
-    <a href="create-login.php"> <button>Create An Account</button>
-</a> 
+    <div class="pt-4 horizontal-center" style="width">
+    <h5 class="text-dark" > No account? Create one today!</h5>
+    <a class="horizontal-center" href="create-login.php"> <button type="button" class="btn btn-dark">Create An Account</button></a> 
+   </div>
   </div>
 
 <?php
-// if ($_SERVER['REQUEST_METHOD'] == "POST")
-// {	   
-//    if (strlen($_POST['username']) > 0)
-//    {
-//       header('Location: survey-instruction.php');
-//    }
-// }
+// Define a function to handle failed validation attempts
+function reject($entry)
+{
+    echo "Rejected $entry <br/>";
+    echo "Please re-enter your username and password <br/>";	
+//   echo 'provide message why the user cannot proceed <br/>';
+//   exit();    // exit the current script, no value is returned
+}
 ?>
 
 <?php
@@ -43,16 +61,6 @@ require("connect-db.php");
 // include("connect-db.php");
 require("review-db.php");
 require("user-db.php");
-
-// Define a function to handle failed validation attempts
-function reject($entry)
-{
-    echo "Rejected $entry <br/>";
-    echo "Please re-enter your username and password <br/>";	
-//   echo 'provide message why the user cannot proceed <br/>';
-//   exit();    // exit the current script, no value is returned
-}
-
 
 
 // Handle form submission.
@@ -74,14 +82,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
       $pwd = htmlspecialchars(trim($_POST['pwd'])); #user input
       // $hash = password_hash($pwd, PASSWORD_DEFAULT);
       $pass = getUserPass($user);
-      $hash = $pass['pass_word'];
-      if (!password_verify($pwd, $hash))
-         reject('Password');
-      else
-      {
-         setcookie('user', $user, time()+3600);
-         setcookie('pwd', password_hash($pwd, PASSWORD_DEFAULT), time()+3600);    // password_hash() requires at least PHP5.5
-         header('Location: home.php');
+      if(!empty($pass)){
+         $hash = $pass['pass_word'];
+         if (!password_verify($pwd, $hash))
+            reject('Password');
+         else
+         {
+            setcookie('user', $user, time()+3600);
+            setcookie('pwd', password_hash($pwd, PASSWORD_DEFAULT), time()+3600);    // password_hash() requires at least PHP5.5
+            header('Location: home.php');
+         }
+      }
+      else{
+         reject('Username');
       }
    }
 }
