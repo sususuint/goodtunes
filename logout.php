@@ -20,7 +20,7 @@
          transform: translateX(-50%);
       }
 </style>
-  <title>PHP State Maintenance (Cookies)</title>    
+  <title>GoodTunes Log Out</title>    
 </head>
 <body style="background-color:pink;">
   
