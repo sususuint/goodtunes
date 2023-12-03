@@ -110,4 +110,16 @@ function addToPlaylist($song_name, $release_date, $user_id, $playlist_number)
   $statement->closeCursor();
 }
 
+function getRandomCountries()
+{
+  global $db;
+  $query = "SELECT country_name, popular_genre, popular_song FROM country ORDER BY RAND() LIMIT 3;";
+  $statement = $db->prepare($query); 
+  $statement->execute();
+  $results = $statement->fetchAll();   // fetch()
+  $statement->closeCursor();
+  return $results;
+}
+
+
 ?>

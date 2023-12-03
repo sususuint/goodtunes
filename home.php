@@ -50,16 +50,28 @@ if (isset($_COOKIE['user'])) {
   <?php
   $list_of_most_added = getMostAddedToSongs();
   $list_of_top_rated = getTopRatedSongs();
+  $list_of_random_countries = getRandomCountries();
+  echo "</br >";
+  echo "Songs most added to playlists:" . "</br >";
   foreach ($list_of_most_added as $added): 
     echo $added['song_name']. " ";
     echo $added['stage_name'];
     echo "</br >";
    endforeach;
   echo "</br >";
+  echo "Top Rated Songs: " . "</br >";
   foreach ($list_of_top_rated as $rated): 
     echo $rated['song_name']. " ";
     echo $rated['stage_name']. " ";
     echo round($rated['average'], 2);
+    echo "</br >";
+   endforeach;
+  echo "</br >";
+  echo "Countries and their top genres and songs: " . "</br >";
+  foreach ($list_of_random_countries as $country): 
+    echo $country['country_name']. " ";
+    echo $country['popular_genre']. " ";
+    echo $country['popular_song']. " ";
     echo "</br >";
    endforeach;
   ?> 
