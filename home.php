@@ -22,13 +22,31 @@ if (isset($_COOKIE['user'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
+  <style>
+      .vertical-center {
+         margin: 0;
+         position: absolute;
+         top: 50%;
+         -ms-transform: translateY(-50%);
+         transform: translateY(-50%);
+         }
+      .horizontal-center {
+         margin: 0;
+         position: absolute;
+         left: 50%;
+         -ms-transform: translateX(-50%);
+         transform: translateX(-50%);
+      }
+  </style>
 </head>
 
-<body>
+<body style="background-color:pink;">
 <?php include("header.html"); ?>  
-<div class="container">
-  <h1>Welcome back, <td><?php echo $_COOKIE['user'] ?> </td> </h1> 
-  <h5>Browse through popular releases! </h5>
+<div class="container mt-5">
+  <h1 class="text-center mt-1">Welcome back, <td><?php echo $_COOKIE['user'] ?>!</td> </h1> 
+  <h4 class="text-center">See the most popular releases! </h4>
+  <h4 class="text-center">Search for them on the song search tab for more info!</h4>
+
   <?php
   $list_of_most_added = getMostAddedToSongs();
   $list_of_top_rated = getTopRatedSongs();
@@ -44,10 +62,6 @@ if (isset($_COOKIE['user'])) {
     echo round($rated['average'], 2);
     echo "</br >";
    endforeach;
-
-  //THIS IS SUPPOSED TO BE MOVED TO SONGS.PHP
-  $ratings = getUsersAvg($_COOKIE['user']);
-  echo round($ratings['@avgRating'], 2);
   ?> 
 </div>
 

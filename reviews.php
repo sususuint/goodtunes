@@ -9,22 +9,48 @@ require("user-db.php");
 if (isset($_COOKIE['user']))
 { 
 $list_of_reviews = getAllReviews($_COOKIE['user']);
+$validRating = True;
+$songExists = True;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['confirmUpdateBtn']))
     {
-        updateReviewByName($_POST['song_name'], $_POST['release_date'], $_POST['user_id'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
-        $list_of_reviews = getAllReviews($_COOKIE['user']);    // name, major, year
+      $validRating = False;
+        if ($_POST['rating'] <= 5 && $_POST['rating'] >= 0){
+          $validRating = True;
+        } 
+        $songExists = False;
+        $list_of_songs= getAllSongs();
+        foreach ($list_of_songs as $song):
+          if ($_POST['song_name'] == $song['song_name'] && $_POST['release_date'] == $song['release_date']){
+            $songExists = True;
+          } 
+        endforeach;
+        if ($validRating && $songExists){
+          updateReviewByName($_POST['song_name'], $_POST['release_date'], $_COOKIE['user'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
+          $list_of_reviews = getAllReviews($_COOKIE['user']);}
     }
     else if (!empty($_POST['deleteBtn']))
     {
-        deleteReview($_POST['song_name_to_delete'], $_POST['release_date_to_delete'], $_POST['user_id_to_delete'], $_POST['review_number_to_delete']);
-        $list_of_reviews = getAllReviews($_COOKIE['user']);    // name, major, year
+        deleteReview($_POST['song_name_to_delete'], $_POST['release_date_to_delete'], $_COOKIE['user'], $_POST['review_number_to_delete']);
+        $list_of_reviews = getAllReviews($_COOKIE['user']);  
     }
     else if (!empty($_POST['addBtn']))
     {
-        addReview($_POST['song_name'], $_POST['release_date'], $_POST['user_id'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
-        $list_of_reviews = getAllReviews($_COOKIE['user']);    // name, major, year
+        $validRating = False;
+        if ($_POST['rating'] <= 5 && $_POST['rating'] >= 0){
+          $validRating = True;
+        } 
+        $songExists = False;
+        $list_of_songs= getAllSongs();
+        foreach ($list_of_songs as $song):
+          if ($_POST['song_name'] == $song['song_name'] && $_POST['release_date'] == $song['release_date']){
+            $songExists = True;
+          } 
+        endforeach;
+        if ($validRating && $songExists){
+          addReview($_POST['song_name'], $_POST['release_date'], $_COOKIE['user'], $_POST['review_number'], $_POST['rating'], $_POST['review_text']);
+          $list_of_reviews = getAllReviews($_COOKIE['user']);}
     }
 }
 ?>
@@ -44,24 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
 </head>
 
-<body>
+<body style="background-color:pink;">
 <?php include("header.html"); ?>  
 <div class="container">
   <h1>Add Review</h1>  
   <form name="mainForm" action="reviews.php" method="post">   
-      <div class="row mb-3 mx-3">
-        Your user id:
-        <input type="text" class="form-control" name="user_id" required 
-            value="<?php 
-            if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            { 
-              if (!empty($_POST['updateBtn']))  // if the update button has been clicked
-                echo $_POST['user_id_to_update']; // access the $_POST['param_name'] 
-            }
-            // echo $_POST['year_to_update']; 
-            ?>"  
-        />  
-      </div>  
       <div class="row mb-3 mx-3">
         Song name:
         <input type="text" class="form-control" name="song_name" required 
@@ -71,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
                 echo $_POST['song_name_to_update']; // access the $_POST['param_name'] 
             }
-            // echo $_POST['year_to_update']; 
+            if (!empty($_COOKIE['reviewSongName']))
+              echo $_COOKIE['reviewSongName'];
             ?>"
         />        
       </div>  
@@ -81,33 +95,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             { 
-              if (!empty($_POST['updateBtn']))  // if the update button has been clicked
-                echo $_POST['release_date_to_update']; // access the $_POST['param_name'] 
+              if (!empty($_POST['updateBtn'])) 
+                echo $_POST['release_date_to_update'];  
             }
-            // echo $_POST['year_to_update']; 
+            if (!empty($_COOKIE['reviewRD']))
+              echo $_COOKIE['reviewRD'];
             ?>"
         />        
       </div>
       <div class="row mb-3 mx-3">
-        Review Number:
-        <input type="text" class="form-control" name="review_number" required 
+        <input type="hidden" class="form-control" name="review_number" required 
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             { 
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
                 echo $_POST['review_number_to_update']; // access the $_POST['param_name'] 
+                else{
+                  $array = getReviewNum($_COOKIE['user']);
+                  foreach ($array as $item):
+                    echo $item['max_num'] + 1;
+                  endforeach;
+                }
             }
             else{
-              $array = getreviewNum($_COOKIE['user']);
+              $no_plays = True;
+              $array = getReviewNum($_COOKIE['user']);
               foreach ($array as $item):
-                echo $item['count'] + 1;
+                $no_plays = False;
+                echo $item['max_num'] + 1;
               endforeach;
+              if ($no_plays){
+                echo 1;
+              }
             }
             ?>"
         />        
       </div> 
       <div class="row mb-3 mx-3">
-        Rating:
+        Rating (0-5):
         <input type="text" class="form-control" name="rating" required 
             value="<?php 
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -115,7 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
                 echo $_POST['rating_to_update']; // access the $_POST['param_name'] 
             }
-            // echo $_POST['year_to_update']; 
             ?>"
         />        
       </div>   
@@ -128,7 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
               if (!empty($_POST['updateBtn']))  // if the update button has been clicked
                 echo $_POST['review_text_to_update']; // access the $_POST['param_name'] 
             }
-            // echo $_POST['year_to_update']; 
             ?>"
         />        
       </div>    
@@ -143,16 +166,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     </form>     
 
 <hr/>
+<?php 
+  if (!$validRating){
+    echo "The rating was out of range please rate the song between 0 and 5!" . "</br>";}
+  if (!$songExists){
+    echo "The song doesn't exist, please add a review by searching for song in navbar song search tab! You can also find song names and release dates there!";}
+?>
+
 <h3>List of your reviews</h3>
 <div class="row justify-content-center">  
-<table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
+<table class="w3-table w3-bordered w3-card-4 center" style="width:80%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="30%">Review Number      
     <th width="30%">Song       
     <th width="30%">Release Date
-    <th width="30%">Rating
-    <th width="30%">Review
+    <th width="10%">Rating
+    <th width="50%">Review
     <th>&nbsp;</th>
     <th>&nbsp;</th>
   </tr>
@@ -161,8 +190,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 <?php foreach ($list_of_reviews as $review): ?>
   <tr>
-     <!-- <td><?php echo $review['user_id']; ?></td>  -->
-     <td><?php echo $review['review_number']; ?></td>         
      <td><?php echo $review['song_name']; ?></td> 
      <td><?php echo $review['release_date']; ?></td>
      <td><?php echo $review['rating']; ?></td>        
@@ -170,9 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
      <td>
         <form action="reviews.php" method="post"> 
             <input type="submit" value="Update" name="updateBtn" class="btn btn-secondary" />
-            <input type="hidden" name="user_id_to_update"
-                    value="<?php echo $review['user_id']; ?>"
-            />
+
             <input type="hidden" name="song_name_to_update"
                     value="<?php echo $review['song_name']; ?>"
             />
@@ -181,9 +206,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             />
             <input type="hidden" name="review_number_to_update"
                     value="<?php echo $review['review_number']; ?>"
-            />
-            <input type="hidden" name="user_id_to_update"
-                    value="<?php echo $review['user_id']; ?>"
             />
             <input type="hidden" name="rating_to_update"
                     value="<?php echo $review['rating']; ?>"

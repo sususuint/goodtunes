@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
 </head>
 
-<body>
+<body style="background-color:pink;">
 <?php include("header.html"); ?>  
 <div class="container">
   <h1>Add A Playlist</h1>  

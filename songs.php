@@ -9,7 +9,7 @@ require("songs-db.php");
 
 if (isset($_COOKIE['user']))
 { 
-$list_of_songs = [];
+$list_of_songs = getAllSongs();
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['songBtn'])){
@@ -31,6 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     {
         addToPlaylist($_POST['song_name_to_add'], $_POST['release_date_to_add'], $_COOKIE['user'], $_POST['playlist_num_to_add']);
       }
+    if (!empty($_POST['reviewBtn']))
+    {
+      setcookie('reviewSongName', $_POST['song_name'], Time()+60);
+      setcookie('reviewRD', $_POST['release_date'], Time()+60);
+      header('Location: reviews.php');
+      }
 }
 ?>
 
@@ -47,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
 </head>
 
-<body>
+<body style="background-color:pink;">
 <?php include("header.html"); ?>  
 <div class="container">
   <h1>Search for songs</h1>  
@@ -69,17 +75,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <?php if(empty($list_of_songs) && $_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST['songBtn']) && empty($_POST['addBtn']) && empty($_POST['add2Btn'])){
   echo "A song match wasn't found, please enter another search query!";
 } ?>
-
 <?php if(empty($_POST['songBtn']) && empty($_POST['addBtn']) && empty($_POST['add2Btn'])){ ?>
 <h3>Songs:</h3>
+
 <div class="row justify-content-center">  
-<table class="w3-table w3-bordered w3-card-4 center" style="width:70%">
+<table class="w3-table w3-bordered w3-card-4 center" style="width:90%">
   <thead>
   <tr style="background-color:#B0B0B0">
     <th width="50%">Name     
     <th width="20%">release date
     <th width="70%">artists
     <th width="15%"> 
+    <th>&nbsp;</th>
     <th>&nbsp;</th>
     <th>&nbsp;</th>
   </tr>
@@ -121,8 +128,17 @@ foreach ($list_of_songs as $song): ?>
             <input type="hidden" name="release_date"
                     value="<?php echo $song['release_date']; ?>"
             />
-        </form>
-    </td>
+        </form></td>
+      <td>
+     <form action="songs.php" method="post"> 
+            <input type="submit" value="Write Review" name="reviewBtn" class="btn btn-secondary" />
+            <input type="hidden" name="song_name"
+                    value="<?php echo $song['song_name']; ?>"
+            />
+            <input type="hidden" name="release_date"
+                    value="<?php echo $song['release_date']; ?>"
+            />
+        </form></td>
   </tr>
 
 <?php endforeach; 
@@ -148,6 +164,8 @@ foreach ($list_of_songs as $song): ?>
       echo $reivew['user_id'] . "</br >";
       echo $reivew['rating'] . "</br >";
       echo $reivew['review_text'] . "</br >";
+      $ratings = getUsersAvg($reivew['user_id']);
+      echo round($ratings['@avgRating'], 2) . "</br >";
      endforeach;
     }
 
