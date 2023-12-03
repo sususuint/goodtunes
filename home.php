@@ -44,6 +44,10 @@ if (isset($_COOKIE['user'])) {
     echo round($rated['average'], 2);
     echo "</br >";
    endforeach;
+
+  //THIS IS SUPPOSED TO BE MOVED TO SONGS.PHP
+  $ratings = getUsersAvg($_COOKIE['user']);
+  echo round($ratings['@avgRating'], 2);
   ?> 
 </div>
 

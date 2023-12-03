@@ -157,8 +157,6 @@ foreach ($list_of_songs as $song): ?>
       echo $rounded_avg;
      }
      
-     # add song to user's playlist
-     # remove song from user's playlist
 
   }
   if (!empty($_POST['addBtn'])){

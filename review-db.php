@@ -77,4 +77,18 @@ function getReviewNum($user_id)
   return $results;
 }
 
+#ADVANCED SQL STORED PROCEDURE
+function getUsersAvg($user_id)
+{
+  global $db;
+  $query = "CALL findUserAvg(?, @avgRating)";
+  $statement = $db->prepare($query); 
+  $statement->bindParam(1, $user_id);
+  $statement->execute();
+  $select = $db->query("select @avgRating");
+  $result = $select->fetch(PDO::FETCH_ASSOC);
+  $statement->closeCursor();
+  return $result;
+}
+
 ?>
