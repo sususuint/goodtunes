@@ -17,11 +17,12 @@
 ////////////////////////////////////////////
 
 /** PHP (on local XAMPP or CS server) connect to MySQL instance (GCP) **/
-// $username = 'root';
-// $password = 'your-root-password';
-// $host = 'instance-connection-name';       // e.g., 'cs4750:us-east4:db-demo'; 
-// $dbname = 'your-database-name;;           // e.g., 'guestbook';
-// $dsn = "mysql:host=your-SQL-public-IP-address;dbname=your-database-name";   // connect PHP (XAMPP) to DB (GCP)
+$username = 'root';
+$password = 'ssosso';
+$host = 'goodtunescs4750:us-east4:goodtunes-cs4750';       // e.g., 'cs4750:us-east4:db-demo'; 
+$dbname = 'ssosso';           // e.g., 'guestbook';
+$dsn = "mysql:host=34.48.22.36;dbname=ssosso";   
+// connect PHP (XAMPP) to DB (GCP)
 //       e.g., "mysql:host=99.99.999.99;dbname=$dbname";   
 
 // to get public IP addres of the SQL instance, go to GCP SQL overview page
@@ -34,11 +35,11 @@
 ////////////////////////////////////////////
 
 /** PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on local XAMPP) **/
- $username = 'ssosso';
- $password = 'goodtunes';
- $host = 'localhost:3306';           // default phpMyAdmin port = 3306
- $dbname = 'ssosso';
- $dsn = "mysql:host=$host;dbname=$dbname";  
+//  $username = 'ssosso';
+//  $password = 'goodtunes';
+//  $host = 'localhost:3306';           // default phpMyAdmin port = 3306
+//  $dbname = 'ssosso';
+//  $dsn = "mysql:host=$host;dbname=$dbname";  
 ////////////////////////////////////////////
 
 /** PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/

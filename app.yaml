@@ -1,0 +1,8 @@
+# Use the PHP 8.1 
+runtime: php81
+
+# Defaults to "serve index.php" 
+# entrypoint: serve helloworld.php
+# entrypoint: serve simpleform.php
+
+# if main page is index.php, comment the above entrypoint setting line
