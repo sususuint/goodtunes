@@ -42,39 +42,76 @@ if (isset($_COOKIE['user'])) {
 
 <body style="background-color:pink;">
 <?php include("header.html"); ?>  
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <?php echo "</br >" ?>
+      <img src="musicnotescolor2.png" alt="Music Notes"  width="200" height="125"> 
+    </div>
+    <div class="col-sm">
+      <h2 class="text-center mt-1"><td><?php echo "</br >" ?> Welcome back, <td><?php echo $_COOKIE['user'] ?>!</td> </h2> 
+      <h5 class="text-center">See the most popular releases! View the most popular songs and genres in different
+      countries. Search for them on the song search tab for more info!</h5>
+    </div>
+  </div>
+</div>
 <div class="container mt-5">
-  <h1 class="text-center mt-1">Welcome back, <td><?php echo $_COOKIE['user'] ?>!</td> </h1> 
-  <h4 class="text-center">See the most popular releases! </h4>
-  <h4 class="text-center">Search for them on the song search tab for more info!</h4>
+  
+  
 
   <?php
   $list_of_most_added = getMostAddedToSongs();
   $list_of_top_rated = getTopRatedSongs();
   $list_of_random_countries = getRandomCountries();
-  echo "</br >";
-  echo "Songs most added to playlists:" . "</br >";
-  foreach ($list_of_most_added as $added): 
-    echo $added['song_name']. " ";
-    echo $added['stage_name'];
-    echo "</br >";
-   endforeach;
-  echo "</br >";
-  echo "Top Rated Songs: " . "</br >";
-  foreach ($list_of_top_rated as $rated): 
-    echo $rated['song_name']. " ";
-    echo $rated['stage_name']. " ";
-    echo round($rated['average'], 2);
-    echo "</br >";
-   endforeach;
-  echo "</br >";
-  echo "Countries and their top genres and songs: " . "</br >";
-  foreach ($list_of_random_countries as $country): 
-    echo $country['country_name']. " ";
-    echo $country['popular_genre']. " ";
-    echo $country['popular_song']. " ";
-    echo "</br >";
-   endforeach;
-  ?> 
+//  echo "</br >";
+//  echo "Songs most added to playlists:" . "</br >";
+  ?>
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <?php echo "</br >"; ?>
+      <h5 class="text-center text-decoration-underline">Most Added Songs</h5>
+      <?php
+      foreach ($list_of_most_added as $added): ?>
+      <h6 class="text-center mt-1"><td><?php echo $added['song_name'] ?> by <?php echo $added['stage_name'] ?></td> </h6> <?php
+      endforeach;
+      echo "</br >"; ?>
+    </div>
+    <div class="col-sm">
+      <h5 class="text-center"><img src="playlist.webp" alt="Music Notes Playlist"  class="w3-circle" width="250" height="150"> </h5>
+    </div>
+    <div class="col-sm">
+      <?php echo "</br >"; ?>
+      <h5 class="text-center text-decoration-underline">Top Rated Songs</h5>
+      <?php
+      foreach ($list_of_top_rated as $rated): ?>
+      <h6 class="text-center mt-1"><td><?php echo $rated['song_name'] ?> by <?php echo $rated['stage_name'] ?> - Average Rating: <?php echo round($rated['average'], 2) ?></td> </h6> <?php
+      endforeach;
+      echo "</br >"; ?>
+    </div>
+  </div>
+</div>
+<div class="container mt-5">
+  
+
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <h5 class="text-center text-decoration-underline">Countries, Top Genres, and Top Songs </h5> 
+      <?php
+      foreach ($list_of_random_countries as $country): ?>
+        <h6 class="text-center mt-1"><td><?php echo $country['country_name'] ?> - Popular Genre: <?php echo $country['popular_genre'] ?> Popular Song: <?php echo $country['popular_song'] ?></td> </h6> <?php
+      endforeach;
+      echo "</br >";
+    ?>  
+    </div>
+    <div class="col-sm">
+      <h5 class="text-center"><img src="musicnotescolor2.png" alt="Music Notes"  width="200" height="125"> </h5>
+    </div>
+  </div>
+  </div>
+  <div class="container mt-5">
+
 </div>
 
  <?php 

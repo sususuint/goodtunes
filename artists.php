@@ -108,7 +108,7 @@ foreach ($list_of_artists as $artist): ?>
     # shows all artist data
     foreach ($artist_info as $info): 
       echo "Stage Name: " . $info['stage_name'] . "</br >";
-      echo "Age " . $info['age'] . "</br >";
+      echo "Age: " . $info['age'] . "</br >";
       echo "Artist Type: " . $info['artist_type'] . "</br >";
       foreach ($fun_facts as $fact):
         echo $fact['fun_fact'] . "</br>";

@@ -20,29 +20,18 @@
          transform: translateX(-50%);
       }
 </style>
-  <title>Log In to GoodTunes!</title>      
-</head>
-<body style="background-color:pink;" >
-  
-  <div class="container vertical-center horizontal-center" style= "width">
-    <h1>Welcome to GoodTunes!</h1>
-    <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
-      Name: <input type="text" name="username" class="form-control" autofocus required /> <br/>
-      Password: <input type="password" name="pwd" class="form-control" required /> <br/>
-      <input type="submit" value="Sign in" class="btn btn-light"  /> 
-    </form>
-    <div class="pt-4 horizontal-center" style="width">
-    <h5 class="text-dark" > No account? Create one today!</h5>
-    <a class="horizontal-center" href="create-login.php"> <button type="button" class="btn btn-dark">Create An Account</button></a> 
-   </div>
-  </div>
+<?php
+$rejected = "";
+?>
+
 
 <?php
 // Define a function to handle failed validation attempts
 function reject($entry)
 {
-    echo "Rejected $entry <br/>";
-    echo "Please re-enter your username and password <br/>";	
+   // echo "Rejected $entry <br/>";
+   // echo "Please re-enter your username and password <br/>";
+    $rejected = "Sorry, please re-enter your username and password";	
 //   echo 'provide message why the user cannot proceed <br/>';
 //   exit();    // exit the current script, no value is returned
 }
@@ -73,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
    // otherwise, reject the username and force re-login.
    $user = trim($_POST['username']);
    if (!ctype_alnum($user))   // ctype_alnum() check if the values contain only alphanumeric data
-      reject('User Name');
+      $rejected = "Sorry, please re-enter your username and password";	
+   //   reject('User Name');
 		
    // If pwd is entered and contains only alphanumeric data, set cookies and redirect the user to survey instruction page;
    // otherwise, reject the password and force re-login.
@@ -85,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
       if(!empty($pass)){
          $hash = $pass['pass_word'];
          if (!password_verify($pwd, $hash))
-            reject('Password');
+            $rejected = "Sorry, please re-enter your username and password";	
+          //  reject('Password');
          else
          {
             setcookie('user', $user, time()+3600);
@@ -94,12 +85,33 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && strlen($_POST['username']) > 0)
          }
       }
       else{
-         reject('Username');
+         $rejected = "Sorry, please re-enter your username and password";	
+         //reject('Username');
       }
    }
 }
-?>
 
+  
+// if ($rejected){
+//    echo "rejected" . "</br>";}
+// ?>
+  <title>Log In to GoodTunes!</title>      
+</head>
+<body style="background-color:pink;" >
+  
+  <div class="container vertical-center horizontal-center" style= "width">
+    <h1>Welcome to GoodTunes!</h1>
+    <form action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
+      Name: <input type="text" name="username" class="form-control" autofocus required /> <br/>
+      Password: <input type="password" name="pwd" class="form-control" required /> <br/>
+      <input type="submit" value="Sign in" class="btn btn-light"  /> 
+    </form>
+    <div><?php echo $rejected; ?> </div>
+    <div class="pt-4 horizontal-center" style="width">
+    <h5 class="text-dark" > No account? Create one today!</h5>
+    <a class="horizontal-center" href="create-login.php"> <button type="button" class="btn btn-dark">Create An Account</button></a> 
+   </div>
+  </div>
 
 </body>
 </html>
