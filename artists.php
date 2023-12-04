@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Search For Artists" name="search" 
-                class="btn btn-dark" title="Find similar artists" />
+            class="btn" style="background-color: #AA336A; color:white" title="Find similar artists" />
       </div>  
     </form>
        
@@ -104,21 +104,37 @@ foreach ($list_of_artists as $artist): ?>
 
 <?php endforeach; 
   }
-  if (!empty($_POST['artistBtn'])){
-    # shows all artist data
-    foreach ($artist_info as $info): 
-      echo "Stage Name: " . $info['stage_name'] . "</br >";
-      echo "Age: " . $info['age'] . "</br >";
-      echo "Artist Type: " . $info['artist_type'] . "</br >";
-      foreach ($fun_facts as $fact):
-        echo $fact['fun_fact'] . "</br>";
-      endforeach;
-      foreach ($where_from as $from):
-        echo "From " . $from['country_name'] . "</br>";
-      endforeach;
-     endforeach;
-     
+  if (!empty($_POST['artistBtn'])){ ?>
+    <!-- shows all artist data -->
+    <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+    <thead>
+      <tr >
+        <th style="background-color:#AA336A; color:white" width="20%"> Stage Name: </th>
+        <th style="background-color:#AA336A; color:white" width="10%"> Age: </th>
+        <th style="background-color:#AA336A; color:white" width="20%"> Artist Type: </th>
+        <th style="background-color:#AA336A; color:white" width="20%"> Where From: </th>
+        <th style="background-color:#AA336A; color:white" width="40%"> Funfacts: </th>
 
+        <th style="background-color:#AA336A; color:white">&nbsp;</th>
+      </tr>
+    </thead>
+    <?php foreach ($artist_info as $info): ?> 
+      <tr >
+        <td> <?php echo $info['stage_name']; ?> </td>
+        <td> <?php echo $info['age']; ?> </td>
+        <td> <?php echo $info['artist_type']; ?> </td>
+        <td> <?php foreach ($where_from as $from): 
+                   echo $from['country_name']. "</br>";
+                   endforeach; ?>
+        </td>
+        <td> <?php foreach ($fun_facts as $fact): 
+                   echo $fact['fun_fact']. "</br>";
+                   endforeach; ?>
+        </td>
+      </tr>
+    <?php endforeach; ?>
+    </table>
+<?php
   }
 
 }

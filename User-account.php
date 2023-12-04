@@ -76,7 +76,7 @@ $user = getUserPass($_COOKIE['user']); ?>
       </div>   
       <div class="row mb-3 mx-3">
         <input type="submit" value="Update Account Info" name="accountBtn" 
-                class="btn btn-primary" title="Update GoodTunes Account" />
+                class="btn" style="background-color: #AA336A; color:white" title="Update GoodTunes Account" />
       </div>  
     </form>
 </table>  
