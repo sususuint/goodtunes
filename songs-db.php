@@ -1,6 +1,7 @@
 <?php
 function songSearch($searchString)
 {
+  # Got help in setting up PDO like formatting from https://stackoverflow.com/questions/11117134/implement-like-query-in-pdo
   global $db;
   $query = "Select DISTINCT song_name, release_date from song natural join performs natural join song_genre where song_name like ?";
   $statement = $db->prepare($query); 
