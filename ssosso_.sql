@@ -23,6 +23,13 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ssosso` /*!40100 DEFAULT CHARACTER SET
 
 USE `ssosso`;
 
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE PROCEDURE `findUserAvg` (IN `username` VARCHAR(30), OUT `avgRating` FLOAT)   SELECT AVG(rating) INTO avgRating FROM review WHERE user_id = username$$
+
+DELIMITER ;
 --
 -- Table structure for table `added_to`
 --
