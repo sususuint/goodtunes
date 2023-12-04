@@ -157,11 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       </div>    
       <div class="row mb-3 mx-3">
         <input type="submit" value="Add review" name="addBtn" 
-                class="btn btn-dark" title="Insert a review into a review table" />
+              class="btn" style="background-color: #AA336A; color:white" title="Insert a review into a review table" />
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Confirm update" name="confirmUpdateBtn" 
-                class="btn btn-dark" title="Update a review in a review table" />
+              class="btn" style="background-color: #AA336A; color:white" title="Update a review in a review table" />
       </div>  
     </form>     
 

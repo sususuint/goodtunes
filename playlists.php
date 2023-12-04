@@ -109,11 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       </div>     
       <div class="row mb-3 mx-3">
         <input type="submit" value="Add Playlist" name="addPlBtn" 
-                class="btn btn-dark" title="Insert a playlist into a playlist table" />
+                class="btn" style="background-color: #AA336A; color:white" title="Insert a playlist into a playlist table" />
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Confirm update" name="confirmUpdateBtn" 
-                class="btn btn-dark" title="Update a playlist in playlist table" />
+                class="btn" style="background-color: #AA336A; color:white" title="Update a playlist in playlist table" />
       </div>  
     </form>     
 

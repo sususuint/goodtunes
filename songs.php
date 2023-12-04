@@ -5,33 +5,32 @@ require("user-db.php");
 require("playlist-db.php");
 require("songs-db.php");
 
-
-
+# Only display site if user has passed verification and is logged in
 if (isset($_COOKIE['user']))
 { 
-$list_of_songs = getAllSongs();
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
+$list_of_songs = getAllSongs(); # Default this list is all songs
+if ($_SERVER['REQUEST_METHOD'] == 'POST') # If any buttons are pressed
 {
-    if (!empty($_POST['songBtn'])){
+    if (!empty($_POST['songBtn'])){ # If View Song is pressed then get all this info from DB
         $song_info = getSongInfo($_POST['song_name'], $_POST['release_date']);
         $song_genres = getGenres($_POST['song_name'], $_POST['release_date']);
         $list_of_artists = getArtists($_POST['song_name'], $_POST['release_date']);
         $all_reviews = getAllUserReviews($_POST['song_name'], $_POST['release_date']);
         $avg_rating = getAvgRating($_POST['song_name'], $_POST['release_date']);
     }
-    if (!empty($_POST['search']))
+    if (!empty($_POST['search'])) # If search is pressed find similar song names
     {
         $list_of_songs = songSearch($_POST['song_name']);
       }
-    if (!empty($_POST['addBtn']))
+    if (!empty($_POST['addBtn'])) # If add to playlist is pressed, get user's playlists
     {
         $list_of_playlists = getAllPlaylists($_COOKIE['user']);
       }
-    if (!empty($_POST['add2Btn']))
+    if (!empty($_POST['add2Btn'])) # if select playlist is pressed, add song to added_to table in DB (adds song to playlist)
     {
         addToPlaylist($_POST['song_name_to_add'], $_POST['release_date_to_add'], $_COOKIE['user'], $_POST['playlist_num_to_add']);
       }
-    if (!empty($_POST['reviewBtn']))
+    if (!empty($_POST['reviewBtn'])) # If write review is pressed, set song info in cookies and redirect to reviews page
     {
       setcookie('reviewSongName', $_POST['song_name'], Time()+60);
       setcookie('reviewRD', $_POST['release_date'], Time()+60);
@@ -56,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body style="background-color:pink;">
 <?php include("header.html"); ?>  
 <div class="container">
+  <!--Search for songs form that always displays on this page -->
   <h1>Search for songs</h1>  
   <form name="mainForm" action="songs.php" method="post">   
       <div class="row mb-3 mx-3">
@@ -65,16 +65,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Search For Songs" name="search" 
-                class="btn btn-dark" title="Find similar songs" />
+                class="btn" style="background-color: #AA336A; color:white" title="Find similar songs" />
       </div>  
     </form>
        
 
 <hr/>
-
+<!-- if Similar Song isn't found and other buttons weren't pressed display message -->
 <?php if(empty($list_of_songs) && $_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST['songBtn']) && empty($_POST['addBtn']) && empty($_POST['add2Btn'])){
   echo "A song match wasn't found, please enter another search query!";
 } ?>
+<!-- if view song, add to playlist, and write review buttons aren't pressed display default page ui-->
 <?php if(empty($_POST['songBtn']) && empty($_POST['addBtn']) && empty($_POST['add2Btn'])){ ?>
 <h3>Songs:</h3>
 
@@ -83,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <thead>
   <tr style="background-color:#B0B0B0">
     <th width="50%">Name     
-    <th width="20%">release date
-    <th width="70%">artists
+    <th width="20%">Release Date
+    <th width="70%">Artists
     <th width="15%"> 
     <th>&nbsp;</th>
     <th>&nbsp;</th>
@@ -94,18 +95,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
 <?php 
+# Displays all songs or similar songs after song search and brief info as well as some interaction buttons.
 foreach ($list_of_songs as $song): ?>
   <tr>
      <td><?php echo $song['song_name'] ?> </td> 
      <td><?php echo $song['release_date']; ?></td>
-     <td><?php 
+     <td><?php # Displays all Artists who performed the song
      $list_of_artists = getArtists($song['song_name'], $song['release_date']);
      foreach ($list_of_artists as $artist): 
       echo $artist['stage_name'];
       echo "</br >";
      endforeach;
      ?></td>
-     <td>
+     <td> <!-- View Song Button -->
      <form action="songs.php" method="post"> 
             <input type="submit" value="View Song" name="songBtn" class="btn btn-secondary" />
             <input type="hidden" name="song_name"
@@ -119,7 +121,7 @@ foreach ($list_of_songs as $song): ?>
             />
         </form>
     </td>
-    <td>
+    <td> <!-- Add to Playlist Button -->
      <form action="songs.php" method="post"> 
             <input type="submit" value="Add to Playlist" name="addBtn" class="btn btn-secondary" />
             <input type="hidden" name="song_name"
@@ -129,7 +131,7 @@ foreach ($list_of_songs as $song): ?>
                     value="<?php echo $song['release_date']; ?>"
             />
         </form></td>
-      <td>
+      <td> <!-- Write Review Button -->
      <form action="songs.php" method="post"> 
             <input type="submit" value="Write Review" name="reviewBtn" class="btn btn-secondary" />
             <input type="hidden" name="song_name"
@@ -143,48 +145,111 @@ foreach ($list_of_songs as $song): ?>
 
 <?php endforeach; 
   }
+
+  # Displays a version of the page when view song button is pressed
   if (!empty($_POST['songBtn'])){
-    # shows all song data
-    foreach ($song_info as $info): 
-      echo $info['song_name'] . "</br >";
-      echo $info['release_date'] . "</br >";
-      echo $info['duration'] . "</br >";
-      echo $info['energy'] . "</br >";
-      foreach ($song_genres as $genre):
-        echo $genre['genre'] . "</br>";
-      endforeach;
-      foreach ($list_of_artists as $artist): 
-        echo $artist['stage_name'] . "</br >";
-      endforeach;
-     endforeach;
+    # shows all song information for a particular song that was selected
+    foreach ($song_info as $info): ?>
+      <div  class= "container row justify-content-center">
+        <h2 class="text-center text-decoration-underline" style="background-color: rgba(255,0,0,0.1)"> <?php echo $info['song_name'] . "</br >"; ?> </h2>
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+                  <tr >
+                    <th style="background-color:#AA336A; color:white" width="40%"> Release Date: </th>
+                    <td width="50%"> <?php echo $info['release_date'] . "</br >"; ?> </td>
+                  </tr>
+                  <tr >
+                    <th style="background-color:#AA336A; color:white" width="40%"> Duration: </th>
+                    <td width="50%"> <?php echo $info['duration'] . "</br >"; ?> </td>
+                  </tr>
+                  <tr >
+                    <th style="background-color:#AA336A; color:white" width="40%"> Energy: </th>
+                    <td width="50%"> <?php echo $info['energy'] . "</br >"; ?> </td>
+                  </tr>
+                </table>
+              </div>
+              
+              <div class="col-sm">
+                <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+                  <tr >
+                    <th style="background-color:#AA336A; color:white" width="40%"> Artists: </th>
+                    <td width="50%"> <?php  foreach ($list_of_artists as $artist): 
+                                            echo $artist['stage_name'] . "</br >";
+                                            endforeach; ?> </td>
+                  </tr>
+                  <tr >
+                    <th style="background-color:#AA336A; color:white" width="40%"> Genre: </th>
+                    <td> <?php  foreach ($song_genres as $genre): 
+                                            echo $genre['genre'] . "</br >";
+                                            endforeach; ?> </td>
+                  </tr>
+                  <tr >
+                    <th style="background-color:#AA336A; color:white" width="40%"> Average Rating: </th>
+                    <td> <?php if (!empty($avg_rating)){
+                               $rounded_avg = round($avg_rating['avg_rating'], 2);
+                               echo $rounded_avg;}
+                               else { echo "N/A";} ?> 
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+      </div>
+     <?php endforeach;
+     # displays all the reviews for the song
+     if(!empty($all_reviews)) { ?>
+          <div  class= "container row justify-content-center">
+          <h4 class="text-center text-decoration-underline mt-5" style="background-color: rgba(255,0,0,0.1)"> Reviews: </h4>
+            <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+            <thead>
+              <tr >
+                <th style="background-color:#AA336A; color:white" width="20%"> User: </th>
+                <th style="background-color:#AA336A; color:white" width="10%"> Rating (0-5): </th>
+                <th style="background-color:#AA336A; color:white" width="40%"> Review: </th>
+                <th style="background-color:#AA336A; color:white" width="40%"> User's Avg. Rating Across Various Songs: </th>
 
-     # show all reviews for the song?
-     if (!empty($all_reviews)){
-     foreach ($all_reviews as $reivew): 
-      echo $reivew['user_id'] . "</br >";
-      echo $reivew['rating'] . "</br >";
-      echo $reivew['review_text'] . "</br >";
-      $ratings = getUsersAvg($reivew['user_id']);
-      echo round($ratings['@avgRating'], 2) . "</br >";
-     endforeach;
-    }
-
-     # show overall avg rating for song
-     if (!empty($avg_rating)){
-      $rounded_avg = round($avg_rating['avg_rating'], 2);
-      echo $rounded_avg;
-     }
-     
-
+              </tr>
+            </thead>
+            <?php foreach ($all_reviews as $review): ?>
+              <tr >
+                <td> <?php $username = getUserName($review['user_id']);
+                            echo $username['name'] . "</br >"; ?> </td>
+                <td> <?php echo $review['rating'] . "</br >"; ?> </td>
+                <td> <?php echo $review['review_text'] . "</br >"; ?> </td>
+                <?php  $ratings = getUsersAvg($review['user_id']) ?>
+                <td> <?php echo round($ratings['@avgRating'], 2) . "</br >"; ?> </td>
+              </tr>
+            <?php endforeach; } ?>
+            </table>
+            </div>
+    <?php   
   }
+
+  # This button displays a version of the page where user can select the playlist they want to add the song too
   if (!empty($_POST['addBtn'])){
-    foreach ($list_of_playlists as $playlist): ?> 
-      <tr>
-      <td><?php echo $playlist['name']. ": "; ?></td>  
-      <td><?php echo $playlist['description'] . "</br >"; ?></td>  
-      <td>
+    # If they don't have playlists a message displays
+    if (empty($list_of_playlists)){ ?>
+      <h3 class="text-center" style="color:#AA336A"> <?php echo "You don't have any playlists. Go to the playlists tab to create one!"; ?> </h3>
+    <?php } ?>
+    <!-- Else they see a table of playlist options -->
+    <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+    <thead>
+      <tr >
+        <th style="background-color:#AA336A; color:white" width="20%"> Playlist: </th>
+        <th style="background-color:#AA336A; color:white" width="40%"> Description: </th>
+        <th style="background-color:#AA336A; color:white">&nbsp;</th>
+      </tr>
+    </thead>
+    <?php foreach ($list_of_playlists as $playlist): ?> 
+      <tr >
+        <td> <?php echo $playlist['name']. ": "; ?> </td>
+        <td> <?php echo $playlist['description'] . "</br >"; ?> </td>
+        <td>
         <form action="songs.php" method="post"> 
-            <input type="submit" value="Add" name="add2Btn" class="btn btn-secondary" />
+            <input type="submit" value="Select Playlist" name="add2Btn" class="btn btn-secondary" />
             <input type="hidden" name="song_name_to_add"
                     value="<?php echo $_POST['song_name']; ?>"
             />
@@ -195,14 +260,14 @@ foreach ($list_of_songs as $song): ?>
                     value="<?php echo $_POST['release_date']; ?>"
             />
         </form>
-     </td>
-    </tr>
-     <?php endforeach;
-    
-
+        </td>
+      </tr>
+    <?php endforeach; ?>
+    </table>
+<?php
   }
-
 }
+# This redirects to the login page if timedout or user isn't verified/logged in
 else 
   header('Location: login.php');   // force login
 ?>
