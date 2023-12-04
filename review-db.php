@@ -101,6 +101,8 @@ function getUserName($user_id)
 }
 
 #ADVANCED SQL STORED PROCEDURE
+# Stored Procedure function set up was derived from the following sources https://stackoverflow.com/questions/16313353/call-to-undefined-method-pdofetch 
+# and https://stackoverflow.com/questions/17014531/php-calling-mysql-stored-procedure-with-both-input-and-output-parameters-not
 function getUsersAvg($user_id)
 {
   global $db;
