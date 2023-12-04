@@ -3,11 +3,11 @@
 ////////////////////////////////////////////
 
 /** PHP (on Google Standard App Engine) connect to MySQL instance (GCP) **/
-// $username = 'root';                       // or your username
-// $password = 'ssosso';     
-// $host = 'goodtunescs4750:us-east4:goodtunes-cs4750';       // e.g., 'cs4750:us-east4:db-demo'; 
-// $dbname = 'ssosso';           // e.g., 'guestbook';
-// $dsn = "mysql:unix_socket=/cloudsql/goodtunescs4750:us-east4:goodtunes-cs4750;dbname=ssosso";
+$username = 'root';                       // or your username
+$password = 'ssosso';     
+$host = 'goodtunescs4750:us-east4:goodtunes-cs4750';       // e.g., 'cs4750:us-east4:db-demo'; 
+$dbname = 'ssosso';           // e.g., 'guestbook';
+$dsn = "mysql:unix_socket=/cloudsql/goodtunescs4750:us-east4:goodtunes-cs4750;dbname=ssosso";
 //       e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
 // --------- to test, include app.yaml with the following code
 // runtime: php74
@@ -17,11 +17,11 @@
 ////////////////////////////////////////////
 
 /** PHP (on local XAMPP or CS server) connect to MySQL instance (GCP) **/
-$username = 'root';
-$password = 'ssosso';
-$host = 'goodtunescs4750:us-east4:goodtunes-cs4750';       // e.g., 'cs4750:us-east4:db-demo'; 
-$dbname = 'ssosso';           // e.g., 'guestbook';
-$dsn = "mysql:host=34.48.22.36;dbname=$dbname";   
+// $username = 'root';
+// $password = 'ssosso';
+// $host = 'goodtunescs4750:us-east4:goodtunes-cs4750';       // e.g., 'cs4750:us-east4:db-demo'; 
+// $dbname = 'ssosso';           // e.g., 'guestbook';
+// $dsn = "mysql:host=34.48.22.36;dbname=$dbname";   
 // connect PHP (XAMPP) to DB (GCP)
 //       e.g., "mysql:host=99.99.999.99;dbname=$dbname";   
 

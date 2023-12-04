@@ -26,7 +26,10 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
       break;    
     case '/artists.php':
       require 'artists.php';
-      break;     
+      break;
+    case '/User-account.php':
+      require 'User-account.php';
+      break;       
    default:
       http_response_code(404);
       exit('Not Found');

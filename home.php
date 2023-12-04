@@ -46,7 +46,7 @@ if (isset($_COOKIE['user'])) {
   <div class="row">
     <div class="col-sm">
       <?php echo "</br >" ?>
-      <img src="musicnotescolor2.png" alt="Music Notes"  width="200" height="125"> 
+      <img src="https://storage.googleapis.com/imagegoodtunesbucket/musicnotescolor2.png" alt="Music Notes"  width="200" height="125"> 
     </div>
     <div class="col-sm">
       <h2 class="text-center mt-1"><td><?php echo "</br >" ?> Welcome back, <td><?php echo $_COOKIE['user'] ?>!</td> </h2> 
@@ -78,7 +78,7 @@ if (isset($_COOKIE['user'])) {
       echo "</br >"; ?>
     </div>
     <div class="col-sm">
-      <h5 class="text-center"><img src="playlist.webp" alt="Music Notes Playlist"  class="w3-circle" width="250" height="150"> </h5>
+      <h5 class="text-center"><img src="https://storage.googleapis.com/imagegoodtunesbucket/playlist.webp" alt="Music Notes Playlist"  class="w3-circle" width="250" height="150"> </h5>
     </div>
     <div class="col-sm">
       <?php echo "</br >"; ?>
@@ -106,7 +106,7 @@ if (isset($_COOKIE['user'])) {
     ?>  
     </div>
     <div class="col-sm">
-      <h5 class="text-center"><img src="musicnotescolor2.png" alt="Music Notes"  width="200" height="125"> </h5>
+      <h5 class="text-center"><img src="https://storage.googleapis.com/imagegoodtunesbucket/musicnotescolor2.png" alt="Music Notes"  width="200" height="125"> </h5>
     </div>
   </div>
   </div>

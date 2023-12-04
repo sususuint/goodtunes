@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Search For Artists" name="search" 
-                class="btn btn-dark" title="Find similar artists" />
+            class="btn" style="background-color: #AA336A; color:white" title="Find similar artists" />
       </div>  
     </form>
        
