@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="your name">
   <meta name="description" content="include some description about your page">  
-  <title>My Reviews</title>
+  <title>Get started with DB programming</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
@@ -157,11 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       </div>    
       <div class="row mb-3 mx-3">
         <input type="submit" value="Add review" name="addBtn" 
-                class="btn btn-dark" title="Insert a review into a review table" />
+              class="btn" style="background-color: #AA336A; color:white" title="Insert a review into a review table" />
       </div>  
       <div class="row mb-3 mx-3">
         <input type="submit" value="Confirm update" name="confirmUpdateBtn" 
-                class="btn btn-dark" title="Update a review in a review table" />
+              class="btn" style="background-color: #AA336A; color:white" title="Update a review in a review table" />
       </div>  
     </form>     
 

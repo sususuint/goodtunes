@@ -88,6 +88,18 @@ function getAllSongs()
   return $results;
 }
 
+function getUserName($user_id)
+{
+  global $db;
+  $query = "select distinct name from review natural join site_user where user_id=:user_id ";
+  $statement = $db->prepare($query); 
+  $statement->bindValue(':user_id', $user_id);
+  $statement->execute();
+  $results = $statement->fetch();   // fetch()
+  $statement->closeCursor();
+  return $results;
+}
+
 #ADVANCED SQL STORED PROCEDURE
 function getUsersAvg($user_id)
 {
